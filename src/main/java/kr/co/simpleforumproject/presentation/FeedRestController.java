@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RequestMapping("/feed")
+@RequestMapping("/api/feed")
 @AllArgsConstructor
 @RestController
 public class FeedRestController {
