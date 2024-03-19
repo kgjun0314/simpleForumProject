@@ -6,7 +6,6 @@ import kr.co.simpleforumproject.infrastructure.CommentRepository;
 import kr.co.simpleforumproject.infrastructure.FeedRepository;
 import kr.co.simpleforumproject.presentation.dto.CommentDto;
 import kr.co.simpleforumproject.presentation.dto.CommentRequestDto;
-import kr.co.simpleforumproject.presentation.dto.CommentResponseDto;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,15 +18,15 @@ public class CommentService {
     private FeedRepository feedRepository;
     private CommentRepository commentRepository;
 
-    public CommentResponseDto createComment(CommentRequestDto commentRequestDto, Long feedId) {
+    public CommentDto createComment(CommentRequestDto commentRequestDto, Long feedId) {
         Optional<Feed> of = feedRepository.findById(feedId);
         Feed feed = null;
         if(of.isPresent()) {
             feed = of.get();
             Comment comment = new Comment(commentRequestDto, feed.getFeedId());
             commentRepository.save(comment);
-            CommentResponseDto commentResponseDto = CommentResponseDto.toDto(comment);
-            return commentResponseDto;
+            CommentDto commentDto = CommentDto.toDto(comment);
+            return commentDto;
         } else {
             return null;
         }

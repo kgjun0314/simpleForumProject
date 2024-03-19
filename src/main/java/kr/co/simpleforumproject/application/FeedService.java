@@ -4,7 +4,6 @@ import kr.co.simpleforumproject.domain.feed.Feed;
 import kr.co.simpleforumproject.infrastructure.FeedRepository;
 import kr.co.simpleforumproject.presentation.dto.FeedDto;
 import kr.co.simpleforumproject.presentation.dto.FeedRequestDto;
-import kr.co.simpleforumproject.presentation.dto.FeedResponseDto;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,11 +14,11 @@ import java.util.List;
 public class FeedService {
     private FeedRepository feedRepository;
 
-    public FeedResponseDto createFeed(FeedRequestDto feedRequestDto) {
+    public FeedDto createFeed(FeedRequestDto feedRequestDto) {
         Feed feed = new Feed(feedRequestDto);
         feedRepository.save(feed);
-        FeedResponseDto feedResponseDto = FeedResponseDto.toDto(feed);
-        return feedResponseDto;
+        FeedDto feedDto = FeedDto.toDto(feed);
+        return feedDto;
     }
 
     public List<FeedDto> findAll() {
