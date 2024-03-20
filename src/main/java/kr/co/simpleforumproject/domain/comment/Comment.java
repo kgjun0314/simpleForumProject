@@ -1,7 +1,7 @@
 package kr.co.simpleforumproject.domain.comment;
 
 import jakarta.persistence.*;
-import kr.co.simpleforumproject.domain.feed.Feed;
+import kr.co.simpleforumproject.domain.feed.Post;
 import kr.co.simpleforumproject.presentation.dto.CommentRequestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,11 +23,13 @@ public class Comment {
 
     private LocalDateTime commentCreateData;
 
-    private Long feedId;
+    @ManyToOne
+    @JoinColumn(name = "post_id")
+    private Post post;
 
-    public Comment(CommentRequestDto commentRequestDto, Long feedId) {
+    public Comment(CommentRequestDto commentRequestDto, Post post) {
         this.commentContent = commentRequestDto.getCommentContent();
         this.commentCreateData = LocalDateTime.now();
-        this.feedId = feedId;
+        this.post = post;
     }
 }

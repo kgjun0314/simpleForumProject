@@ -1,8 +1,6 @@
 package kr.co.simpleforumproject.presentation.dto;
 
-import jakarta.persistence.Column;
 import kr.co.simpleforumproject.domain.comment.Comment;
-import kr.co.simpleforumproject.domain.feed.Feed;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,16 +14,13 @@ public class CommentDto {
     private Long commentId;
     private String commentContent;
     private LocalDateTime commentCreateData;
-    private Long feedId;
 
     public static CommentDto toDto(Comment comment) {
-        CommentDto feedDto = new CommentDto(
+        CommentDto commentDto = new CommentDto(
                 comment.getCommentId(),
                 comment.getCommentContent(),
-                comment.getCommentCreateData(),
-                comment.getFeedId()
+                comment.getCommentCreateData()
         );
-
-        return feedDto;
+        return commentDto;
     }
 }
