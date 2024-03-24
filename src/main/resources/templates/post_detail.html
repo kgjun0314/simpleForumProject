@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>Simple Forum</title>
+    </head>
+    <body>
+        <h1 id="post-subject"></h1>
+        <div id="post-content"></div>
+
+        <form onsubmit="return createCommentRequest();">
+            <textarea name="content" id="content" rows="15"></textarea>
+            <input type="submit" value="답변등록">
+        </form>
+
+        <script>
+            function createCommentRequest() {
+
+            }
+
+            function getPostDetailRequest() {
+                function onReadyStateChange(event) {
+                    const currentAjaxRequest = event.currentTarget;
+
+                    if(currentAjaxRequest.readyState === XMLHttpRequest.DONE) {
+                        if(currentAjaxRequest.status === 200) {
+                            const postSubjectDom = document.querySelector('#post-subject');
+                            const postContentDom = document.querySelector('#post-content');
+                            const post = JSON.parse(currentAjaxRequest.responseText);
+                            postSubjectDom.textContent = post.postSubject;
+                            postContentDom.textContent = post.postContent;
+                        } else {
+                            console.error('request failed');
+                        }
+                    }
+                }
+
+                const ajaxRequest = new XMLHttpRequest();
+                const postId = window.location.pathname.split('/').pop();
+                const url = `/api/post/detail/${postId}`;
+                ajaxRequest.onreadystatechange = onReadyStateChange;
+                ajaxRequest.open('GET', url);
+                ajaxRequest.send();
+            }
+
+            window.onload = getPostDetailRequest;
+        </script>
+    </body>
+</html>

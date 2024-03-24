@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>Simple Forum</title>
+    </head>
+    <body>
+        <table>
+            <thead>
+                <tr>
+                    <th>제목</th>
+                    <th>작성일시</th>
+                </tr>
+            </thead>
+            <tbody id="post-list">
+            </tbody>
+        </table>
+        <script>
+            function getPostListRequest() {
+                function onReadyStateChange(event) {
+                    const currentAjaxRequest = event.currentTarget;
+
+                    if(currentAjaxRequest.readyState === XMLHttpRequest.DONE) {
+                        if(currentAjaxRequest.status === 200) {
+                            const postListDom = document.querySelector('#post-list')
+                            postListDom.innerHTML = '';
+
+                            const posts = JSON.parse(currentAjaxRequest.responseText);
+                            posts.forEach(post => {
+                                const trNode = document.createElement('tr');
+                                const tdNode1 = document.createElement('td');
+                                const aNode = document.createElement('a');
+                                const postSubject = document.createTextNode(post.postSubject);
+                                aNode.appendChild(postSubject);
+                                aNode.href = `/post/detail/${post.postId}`;
+                                tdNode1.appendChild(aNode);
+                                trNode.appendChild(tdNode1);
+                                const tdNode2 = document.createElement('td');
+                                const postCreatedDate = document.createTextNode(post.postCreatedDate);
+                                tdNode2.appendChild(postCreatedDate);
+                                trNode.appendChild(tdNode2)
+                                postListDom.appendChild(trNode);
+                            });
+                        } else {
+                            console.error('request failed');
+                        }
+                    }
+                }
+
+                const ajaxRequest = new XMLHttpRequest();
+
+                ajaxRequest.onreadystatechange = onReadyStateChange;
+                ajaxRequest.open('GET', '/api/post/list');
+                ajaxRequest.send();
+            }
+
+            window.onload = getPostListRequest;
+        </script>
+    </body>
+</html>

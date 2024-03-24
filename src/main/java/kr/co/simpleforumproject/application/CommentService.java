@@ -6,6 +6,7 @@ import kr.co.simpleforumproject.infrastructure.CommentRepository;
 import kr.co.simpleforumproject.infrastructure.PostRepository;
 import kr.co.simpleforumproject.presentation.dto.CommentDto;
 import kr.co.simpleforumproject.presentation.dto.CommentRequestDto;
+import kr.co.simpleforumproject.presentation.dto.PostDto;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

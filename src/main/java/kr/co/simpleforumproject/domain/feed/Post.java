@@ -2,7 +2,10 @@ package kr.co.simpleforumproject.domain.feed;
 
 import jakarta.persistence.*;
 import kr.co.simpleforumproject.domain.comment.Comment;
+import kr.co.simpleforumproject.presentation.dto.CommentDto;
+import kr.co.simpleforumproject.presentation.dto.PostDto;
 import kr.co.simpleforumproject.presentation.dto.PostRequestDto;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,6 +14,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter

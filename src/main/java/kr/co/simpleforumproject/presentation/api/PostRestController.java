@@ -23,4 +23,9 @@ public class PostRestController {
     public List<PostDto> listPost(){
         return postService.findAll();
     }
+
+    @GetMapping("/detail/{postId}")
+    public PostDto getPost(@PathVariable Long postId){
+        return PostDto.toDto(postService.getPost(postId));
+    }
 }

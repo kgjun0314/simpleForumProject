@@ -1,5 +1,6 @@
 package kr.co.simpleforumproject.application;
 
+import kr.co.simpleforumproject.domain.exception.DataNotFoundException;
 import kr.co.simpleforumproject.domain.feed.Post;
 import kr.co.simpleforumproject.infrastructure.PostRepository;
 import kr.co.simpleforumproject.presentation.dto.PostDto;
@@ -30,10 +31,12 @@ public class PostService {
         return postDtos;
     }
 
-    public Post findById(Long postId) {
+    public Post getPost(Long postId) {
         Optional<Post> op = postRepository.findById(postId);
-        if(op.isPresent())
+        if(op.isPresent()) {
             return op.get();
-        return null;
+        } else {
+            throw new DataNotFoundException("question not found");
+        }
     }
 }
