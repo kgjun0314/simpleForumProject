@@ -26,6 +26,6 @@ public class PostRestController {
 
     @GetMapping("/detail/{postId}")
     public PostDto getPost(@PathVariable Long postId){
-        return PostDto.toDto(postService.getPost(postId));
+        return postService.getPost(postId);
     }
 }

@@ -7,17 +7,68 @@
         <title>Simple Forum</title>
     </head>
     <body>
-        <h1 id="post-subject"></h1>
-        <div id="post-content"></div>
-
-        <form onsubmit="return createCommentRequest();">
-            <textarea name="content" id="content" rows="15"></textarea>
-            <input type="submit" value="답변등록">
-        </form>
+        <link rel="stylesheet" type="text/css" th:href="@{/bootstrap.min.css}">
+        <div class="container my-3">
+            <h2 class="border-bottom py-2" id="post-subject"></h2>
+            <div class="card my-3">
+                <div class="card-body">
+                    <div class="card-text" style="white-space: pre-line;" id="post-content"></div>
+                    <div class="d-flex justify-content-end">
+                        <div class="badge bg-light text-dark p-2 text-start">
+                            <div id="post-created-date"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <h5 class="border-bottom my-3 py-2" id="post-comment-count"></h5>
+            <div id="post-comments"></div>
+            <form id="submit-form" onsubmit="return createCommentRequest();" class="my-3"></form>
+        </div>
 
         <script>
-            function createCommentRequest() {
+            function formatDate(dateString) {
+                const date = new Date(dateString);
+                if (isNaN(date)) {
+                    return "Invalid Date";
+                }
+                const year = date.getFullYear();
+                const month = ('0' + (date.getMonth() + 1)).slice(-2);
+                const day = ('0' + date.getDate()).slice(-2);
+                const hour = ('0' + date.getHours()).slice(-2);
+                const minute = ('0' + date.getMinutes()).slice(-2);
+                return `${year}-${month}-${day} ${hour}:${minute}`;
+            }
 
+            function createCommentRequest() {
+                const commentContentElement = document.querySelector('#content');
+                const commentContent = document.querySelector('#content').value;
+                const requestObject = {commentContent: commentContent};
+                const requestJson = JSON.stringify(requestObject);
+
+                function onReadyStateChange(event) {
+                    const currentAjaxRequest = event.currentTarget;
+
+                    if(currentAjaxRequest.readyState === XMLHttpRequest.DONE) {
+                        if(currentAjaxRequest.status === 200) {
+                            console.log('댓글 작성 완료')
+                            commentContentElement.value = '';
+                            getPostDetailRequest();
+                        } else {
+                            console.error('request failed');
+                        }
+                    }
+                }
+
+                const ajaxRequest = new XMLHttpRequest();
+                const postId = window.location.pathname.split('/').pop();
+                const url = `/api/comment/create/${postId}`;
+
+                ajaxRequest.onreadystatechange = onReadyStateChange;
+                ajaxRequest.open('POST', url);
+                ajaxRequest.setRequestHeader('Content-Type', 'application/json');
+                ajaxRequest.send(requestJson);
+
+                return false;
             }
 
             function getPostDetailRequest() {
@@ -26,11 +77,67 @@
 
                     if(currentAjaxRequest.readyState === XMLHttpRequest.DONE) {
                         if(currentAjaxRequest.status === 200) {
+                            // 포스트 제목과 내용, 게시일자를 표시하는 부분
                             const postSubjectDom = document.querySelector('#post-subject');
                             const postContentDom = document.querySelector('#post-content');
+                            const postCreatedDateDom = document.querySelector('#post-created-date');
                             const post = JSON.parse(currentAjaxRequest.responseText);
                             postSubjectDom.textContent = post.postSubject;
                             postContentDom.textContent = post.postContent;
+                            postCreatedDateDom.textContent = formatDate(post.postCreatedDate);
+
+
+                            // 댓글의 수 표시
+                            const postCommentCountDom = document.querySelector('#post-comment-count');
+                            postCommentCountDom.textContent = post.postCommentList.length + "개의 답변이 있습니다."
+
+                            // 댓글 표시
+                            const postCommentsDom = document.querySelector('#post-comments');
+                            postCommentsDom.innerHTML = '';
+                            post.postCommentList.forEach(comment => {
+                                const div1Node = document.createElement('div');
+                                div1Node.className = "card my-3";
+
+                                const div2Node = document.createElement('div');
+                                div2Node.className = "card-body";
+
+                                const div3Node = document.createElement('div');
+                                div3Node.className = 'card-text';
+                                div3Node.style.whiteSpace = "pre-line";
+                                div3Node.textContent = comment.commentContent;
+
+                                const div4Node = document.createElement('div');
+                                div4Node.className = "d-flex justify-content-end";
+
+                                const div5Node = document.createElement('div');
+                                div5Node.className = "badge bg-light text-dark p-2 text-start";
+
+                                const div6Node = document.createElement('div');
+                                div6Node.textContent = formatDate(comment.commentCreatedDate);
+
+                                div5Node.appendChild(div6Node);
+                                div4Node.appendChild(div5Node);
+                                div2Node.appendChild(div3Node);
+                                div2Node.appendChild(div4Node);
+                                div1Node.appendChild(div2Node);
+                                postCommentsDom.appendChild(div1Node);
+                            });
+
+                            //댓글 작성 폼
+                            if (!document.querySelector('#content')) {
+                                const submitFormDom = document.querySelector('#submit-form');
+                                const textAreaNode = document.createElement('textarea');
+                                textAreaNode.name = "content";
+                                textAreaNode.id = "content";
+                                textAreaNode.rows = "15";
+                                textAreaNode.className = "form-control";
+                                const inputNode = document.createElement('input');
+                                inputNode.type = "submit";
+                                inputNode.value = "답변등록";
+                                inputNode.className = "btn btn-primary my-2";
+                                submitFormDom.appendChild(textAreaNode);
+                                submitFormDom.appendChild(inputNode);
+                            }
                         } else {
                             console.error('request failed');
                         }

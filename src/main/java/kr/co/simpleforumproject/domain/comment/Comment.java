@@ -25,7 +25,7 @@ public class Comment {
     @Column(columnDefinition = "TEXT")
     private String commentContent;
 
-    private LocalDateTime commentCreateData;
+    private LocalDateTime commentCreatedDate;
 
     @ManyToOne
     @JoinColumn(name = "post_id")
@@ -33,7 +33,7 @@ public class Comment {
 
     public Comment(CommentRequestDto commentRequestDto, Post post) {
         this.commentContent = commentRequestDto.getCommentContent();
-        this.commentCreateData = LocalDateTime.now();
+        this.commentCreatedDate = LocalDateTime.now();
         this.post = post;
     }
 }

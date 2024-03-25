@@ -31,10 +31,10 @@ public class PostService {
         return postDtos;
     }
 
-    public Post getPost(Long postId) {
+    public PostDto getPost(Long postId) {
         Optional<Post> op = postRepository.findById(postId);
         if(op.isPresent()) {
-            return op.get();
+            return PostDto.toDto(op.get());
         } else {
             throw new DataNotFoundException("question not found");
         }

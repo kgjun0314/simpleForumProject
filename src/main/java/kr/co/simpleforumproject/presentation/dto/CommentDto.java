@@ -13,13 +13,13 @@ import java.time.LocalDateTime;
 public class CommentDto {
     private Long commentId;
     private String commentContent;
-    private LocalDateTime commentCreateData;
+    private LocalDateTime commentCreatedDate;
 
     public static CommentDto toDto(Comment comment) {
         CommentDto commentDto = new CommentDto(
                 comment.getCommentId(),
                 comment.getCommentContent(),
-                comment.getCommentCreateData()
+                comment.getCommentCreatedDate()
         );
         return commentDto;
     }

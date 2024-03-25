@@ -19,6 +19,6 @@ public class CommentRestController {
 
     @PostMapping("/create/{postId}")
     public CommentDto createComment(@RequestBody CommentRequestDto commentRequestDto, @PathVariable Long postId) {
-        return commentService.createComment(commentRequestDto, postService.getPost(postId));
+        return commentService.createComment(commentRequestDto, postId);
     }
 }
